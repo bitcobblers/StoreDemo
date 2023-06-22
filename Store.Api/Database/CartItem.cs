@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Store.Api.Database;
 
-namespace Store.Api.Database;
-
-[Table(nameof(CartItem))]
 public class CartItem
 {
     public int Id { get; set; }

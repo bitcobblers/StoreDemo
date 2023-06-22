@@ -1,8 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿namespace Store.Api.Database;
 
-namespace Store.Api.Database;
-
-[Table(nameof(Order))]
 public class Order
 {
     public int Id { get; set; }
