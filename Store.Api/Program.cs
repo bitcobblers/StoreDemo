@@ -17,7 +17,7 @@ builder.Services.AddSwaggerGen(swagger =>
     swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey,
+        Type = SecuritySchemeType.Http,
         Scheme = "Bearer",
         BearerFormat = "JWT",
         In = ParameterLocation.Header,
@@ -48,24 +48,22 @@ builder.Services.AddAuthentication(options =>
 {
     IConfiguration config = builder.Configuration;
     var key = Encoding.UTF8.GetBytes(config["Jwt:Key"]!);
+    var issuer = config["Jwt:Issuer"];
 
     options.TokenValidationParameters = new()
     {
         ValidateIssuer = true,
-        ValidateAudience = true,
+        ValidateAudience = false,
         ValidateLifetime = false,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = config["Jwt:Issuer"],
+        ValidIssuer = issuer,
         IssuerSigningKey = new SymmetricSecurityKey(key)
     };
 
     options.RequireHttpsMetadata = false;
 });
 
-
 builder.Host.UseSerilog();
-
-
 
 var app = builder.Build();
 
@@ -76,7 +74,7 @@ if(app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-//app.UseHttpsRedirection();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

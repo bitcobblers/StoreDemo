@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Store.Api.Models;
 using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace Store.Api.Controllers;
@@ -12,18 +10,15 @@ namespace Store.Api.Controllers;
 [ApiController]
 public class LoginController : ControllerBase
 {
-    private readonly IConfiguration _configuration;
     private readonly byte[] _key;
     private readonly string _issuer;
 
     public LoginController(IConfiguration configuration)
     {
-        _configuration = configuration;
-        _key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
-        _issuer = _configuration["Jwt:Issuer"]!;
+        _key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!);
+        _issuer = configuration["Jwt:Issuer"]!;
     }
 
-    [AllowAnonymous]
     [HttpPost]
     public IActionResult Login([FromBody]LoginModel login)
     {
@@ -37,8 +32,8 @@ public class LoginController : ControllerBase
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
         var token = new JwtSecurityToken(
             _issuer,
-            _issuer,
-            null,
+            audience: null,
+            claims: null,
             expires: DateTime.UtcNow.AddMinutes(120),
             signingCredentials: credentials);
 
