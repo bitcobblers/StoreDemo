@@ -1,5 +1,8 @@
-﻿namespace Store.Api.Database;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
+namespace Store.Api.Database;
+
+[Table(nameof(Product))]
 public class Product
 {
     public int Id { get; set; }
