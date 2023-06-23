@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Store.Api.Database;
 using Store.Api.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -12,18 +13,29 @@ public class LoginController : ControllerBase
 {
     private readonly byte[] _key;
     private readonly string _issuer;
+    private readonly StoreContext _context;
 
-    public LoginController(IConfiguration configuration)
+    public LoginController(IConfiguration configuration, StoreContext context)
     {
         _key = Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!);
         _issuer = configuration["Jwt:Issuer"]!;
+        _context = context;
     }
 
     [HttpPost]
-    public IActionResult Login([FromBody]LoginModel login)
+    public IActionResult Login([FromBody] LoginModel login)
     {
-        var token = GenerateToken();
-        return Ok(new { Token = token, Message = "success" });
+        var user = _context.Accounts.FirstOrDefault(x => x.Username == login.Username && x.Password == login.Password);
+
+        if (user != null)
+        {
+            var token = GenerateToken();
+            return Ok(new LoginResponse(token, "Success"));
+        }
+        else
+        {
+            return BadRequest(new LoginResponse(null, "Invalid user/password"));
+        }
     }
 
     private string GenerateToken()
