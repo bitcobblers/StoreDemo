@@ -23,7 +23,7 @@ public class LoginController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Login([FromBody] LoginModel login)
+    public IActionResult Login([FromBody] LoginRequest login)
     {
         var user = _context.Accounts.FirstOrDefault(x => x.Username == login.Username && x.Password == login.Password);
 

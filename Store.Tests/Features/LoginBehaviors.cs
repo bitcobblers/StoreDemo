@@ -5,7 +5,7 @@ using System.Net;
 
 namespace Store.Tests.Features;
 
-public class LoginBehaviors : IClassFixture<StoreApi>
+public class LoginBehaviors : CommonSteps, IClassFixture<StoreApi>
 {
     private readonly StoreApi _storeApi;
 
@@ -17,8 +17,8 @@ public class LoginBehaviors : IClassFixture<StoreApi>
     public Behavior EnsurePasswordIsValidated(string user, string password, HttpStatusCode expected)
     {
         return new Behavior()
-            .Given("New client", context => context.Client = _storeApi.CreateClient())
-            .Given("Set credentials", context => context.Credentials = new LoginModel(user, password))
+            .Given(ConfigureClient(_storeApi))
+            .Given(ConfigureCredentials(user, password))
             .When<LoginStep>()
             .Then(CheckLastResponse(expected));
     }
@@ -28,8 +28,8 @@ public class LoginBehaviors : IClassFixture<StoreApi>
     public Behavior SuccessfulLoginReturnsToken(string user, string password)
     {
         return new Behavior()
-            .Given("New client", context => context.Client = _storeApi.CreateClient())
-            .Given("Set credentials", context => context.Credentials = new LoginModel(user, password))
+            .Given(ConfigureClient(_storeApi))
+            .Given(ConfigureCredentials(user, password))
             .When<LoginStep>()
             .Then(CheckValidToken());
     }
@@ -37,8 +37,8 @@ public class LoginBehaviors : IClassFixture<StoreApi>
     public LambdaStep CheckLastResponse(HttpStatusCode expected) =>
         new LambdaThenStep()
             .Named("Check last response")
-            .Handle(context =>
-                Assert.Equal(expected, context.LastResponse.StatusCode));
+            .Handle<ApiContext>(context =>
+                Assert.Equal(expected, context.LastResponse?.StatusCode));
 
     public LambdaStep CheckValidToken() =>
         new LambdaThenStep()
