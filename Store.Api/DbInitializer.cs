@@ -1,4 +1,5 @@
-﻿using Store.Api.Database;
+﻿using Microsoft.EntityFrameworkCore;
+using Store.Api.Database;
 
 namespace Store.Api;
 
@@ -10,9 +11,24 @@ public static class DbInitializer
 
         if (context.Accounts.Any())
         {
-            return;
+            PurgeData(context);
         }
 
+        SeedDatabase(context);
+    }
+
+    private static void PurgeData(StoreContext context)
+    {
+        context.Orders.ExecuteDelete();
+        context.Carts.ExecuteDelete();
+        context.CartItems.ExecuteDelete();
+        context.PurchaseItems.ExecuteDelete();
+        context.Products.ExecuteDelete();
+        context.Accounts.ExecuteDelete();
+    }
+
+    private static void SeedDatabase(StoreContext context)
+    {
         AddAccount(context, "jdoe", "John", "Doe", "password");
         AddProduct(context, "Product 1", 10m, "Product 1 description.");
         AddProduct(context, "Product 2", 15m, "Product 2 description.");
@@ -32,19 +48,6 @@ public static class DbInitializer
         };
 
         context.Accounts.Add(account);
-        context.SaveChanges();
-
-        AddCart(context, account);
-    }
-
-    private static void AddCart(StoreContext context, Account account)
-    {
-        var cart = new ShoppingCart
-        {
-            Account = account
-        };
-
-        context.Carts.Add(cart);
         context.SaveChanges();
     }
 

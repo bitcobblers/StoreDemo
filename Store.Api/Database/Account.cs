@@ -8,5 +8,6 @@ public class Account
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
+    public ShoppingCart? ShoppingCart { get; set; }
     public ICollection<Order> Orders {  get; set; } = new List<Order>();
 }
