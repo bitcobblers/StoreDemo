@@ -3,7 +3,7 @@
 public class Order
 {
     public int Id { get; set; }
-    public Guid OrderNumber { get; set; } = Guid.NewGuid();
+    public string OrderNumber { get; set; } = Guid.NewGuid().ToString("N");
     public DateTime DateOrdered { get; set; }
-    public ICollection<PurchaseItem> Items { get; set; }
+    public virtual List<PurchaseItem> Items { get; set; } = new();
 }

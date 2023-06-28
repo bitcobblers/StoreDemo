@@ -3,5 +3,5 @@
 public class ShoppingCart
 {
     public int Id { get; set; }
-    public ICollection<CartItem> Items { get; set; }
+    public virtual List<CartItem> Items { get; set; } = new ();
 }

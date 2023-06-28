@@ -18,11 +18,25 @@ public class StoreContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Account>().ToTable("Accounts");
-        modelBuilder.Entity<ShoppingCart>().ToTable("Carts");
-        modelBuilder.Entity<CartItem>().ToTable("CartItems");
-        modelBuilder.Entity<PurchaseItem>().ToTable("PurchaseItems");
-        modelBuilder.Entity<Product>().ToTable("Products");
-        modelBuilder.Entity<Order>().ToTable("Orders");
+        modelBuilder.Entity<Account>()
+            .ToTable("Accounts");
+
+        modelBuilder.Entity<ShoppingCart>()
+            .ToTable("Carts")
+            .Navigation(x => x.Items).AutoInclude();
+
+        modelBuilder.Entity<CartItem>()
+            .ToTable("CartItems")
+            .Navigation(x => x.Product).AutoInclude();
+       
+        modelBuilder.Entity<PurchaseItem>()
+            .ToTable("PurchaseItems");
+        
+        modelBuilder.Entity<Product>()
+            .ToTable("Products");
+
+        modelBuilder.Entity<Order>()
+            .ToTable("Orders")
+            .Navigation(x => x.Items).AutoInclude();
     }
 }

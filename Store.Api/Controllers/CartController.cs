@@ -12,18 +12,27 @@ public class CartController : ControllerBase
     public CartController(StoreContext context) => _context = context;
 
     [HttpPost("clear")]
-    public IActionResult Clear([FromBody] int id)
+    public async Task<IActionResult> Clear([FromBody] int id)
     {
-        var hasCart = _context.Carts.Any(x => x.Id == id);
-        return hasCart ? Ok() : NotFound();
+        var cart = await _context.Carts.FindAsync(id);
+
+        if(cart == null)
+        {
+            return NotFound();
+        }
+
+        cart.Items.Clear();
+        await _context.SaveChangesAsync();
+
+        return Ok();
     }
 
     [HttpGet, Route("load/{id}")]
-    public ActionResult<ShoppingCart> Load(int id)
+    public async Task<ActionResult<ShoppingCart>> Load(int id)
     {
-        var cart = _context.Carts.FirstOrDefault(x => x.Id == id);
+        var cart = await _context.Carts.FindAsync(id);
 
-        if(cart!=null)
+        if (cart != null)
         {
             return Ok(cart);
         }
@@ -43,8 +52,38 @@ public class CartController : ControllerBase
     }
 
     [HttpPost("add")]
-    public IActionResult AddProduct([FromBody]AddProductRequest request)
+    public async Task<IActionResult> AddProduct([FromBody] AddProductRequest request)
     {
-        return BadRequest();
+        var cart = await _context.Carts.FindAsync(request.CartId);
+
+        if (cart == null)
+        {
+            return NotFound("Could not find cart.");
+        }
+
+        var addedItem = cart.Items.FirstOrDefault(x => x.Product.Id == request.ProductId);
+
+        if (addedItem != null)
+        {
+            addedItem.Quantity += request.Quantity;
+        }
+        else
+        {
+            var product = await _context.Products.FindAsync(request.ProductId);
+
+            if (product == null)
+            {
+                return BadRequest("Could not find product");
+            }
+
+            cart.Items.Add(new CartItem
+            {
+                Product = product,
+                Quantity = request.Quantity
+            });
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok();
     }
 }
