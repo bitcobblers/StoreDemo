@@ -7,8 +7,7 @@ using System.Text;
 
 namespace Store.Api.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
+[ApiController, Route("api/[controller]")]
 public class LoginController : ControllerBase
 {
     private readonly byte[] _key;

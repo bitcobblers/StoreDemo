@@ -3,8 +3,7 @@ using Store.Api.Database;
 
 namespace Store.Api.Controllers;
 
-[Route("api/[controller]")]
-[ApiController]
+[ApiController, Route("api/[controller]")]
 public class ProductsController : ControllerBase
 {
     private readonly StoreContext _context;

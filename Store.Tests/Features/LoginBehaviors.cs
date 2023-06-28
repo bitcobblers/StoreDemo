@@ -34,12 +34,6 @@ public class LoginBehaviors : CommonSteps, IClassFixture<StoreApi>
             .Then(CheckValidToken());
     }
 
-    public LambdaStep CheckLastResponse(HttpStatusCode expected) =>
-        new LambdaThenStep()
-            .Named("Check last response")
-            .Handle<ApiContext>(context =>
-                Assert.Equal(expected, context.LastResponse?.StatusCode));
-
     public LambdaStep CheckValidToken() =>
         new LambdaThenStep()
             .Named("Check token is valid")
