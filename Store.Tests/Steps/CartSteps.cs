@@ -11,7 +11,7 @@ public static class CartSteps
     private static readonly Random random = new();
 
     public static LambdaStep NewCart(HttpClient client) =>
-        new LambdaGivenStep()
+        new GivenLambdaStep()
             .Named("Create new cart")
             .HandleAsync(async context =>
             {
@@ -22,7 +22,7 @@ public static class CartSteps
             });
 
     public static LambdaStep LoadProducts(HttpClient client) =>
-        new LambdaGivenStep()
+        new GivenLambdaStep()
             .Named("Get product list")
             .HandleAsync(async context =>
             {
@@ -35,7 +35,7 @@ public static class CartSteps
     // ---
 
     public static LambdaStep AddRandomProductToCart(HttpClient client) =>
-        new LambdaWhenStep()
+        new WhenLambdaStep()
             .Named("Add random product to cart")
             .HandleAsync(async context =>
             {
@@ -48,7 +48,7 @@ public static class CartSteps
             });
 
     public static LambdaStep LoadCurrentCart(HttpClient client) =>
-        new LambdaWhenStep()
+        new WhenLambdaStep()
             .Named("Load current cart")
             .HandleAsync(async context =>
             {
@@ -66,7 +66,7 @@ public static class CartSteps
             });
 
     public static LambdaStep ClearCurrentCart(HttpClient client) =>
-        new LambdaWhenStep()
+        new WhenLambdaStep()
             .Named("Clear current cart")
             .HandleAsync(async context =>
             {
@@ -79,7 +79,7 @@ public static class CartSteps
     // ---
 
     public static LambdaStep CheckCartSize(int size) =>
-        new LambdaWhenStep()
+        new WhenLambdaStep()
             .Named($"Check cart contains {size:N0} items")
             .Handle(context =>
             {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Store.Api.Database;
 using Store.Api.Models;
 
@@ -14,7 +15,7 @@ public class OrderController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<Order>> Load(string id)
     {
-        var order = _context.Orders.FirstOrDefault(x => x.OrderNumber == id);
+        var order = await _context.Orders.FirstOrDefaultAsync(x => x.OrderNumber == id);
 
         if(order == null)
         {

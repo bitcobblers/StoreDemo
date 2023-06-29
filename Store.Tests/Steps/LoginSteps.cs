@@ -9,7 +9,7 @@ namespace Store.Tests.Steps;
 public static class LoginSteps
 {
     public static LambdaStep Login(HttpClient client, string user, string password) =>
-        new LambdaWhenStep()
+        new WhenLambdaStep()
             .Named("Login")
             .HandleAsync(async context =>
             {
@@ -33,7 +33,7 @@ public static class LoginSteps
             });
 
     public static LambdaStep CheckToken(bool isValid) =>
-        new LambdaThenStep()
+        new ThenLambdaStep()
             .Named("Check token is valid")
             .Handle(context =>
             {
