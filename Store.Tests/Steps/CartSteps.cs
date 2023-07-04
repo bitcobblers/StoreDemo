@@ -11,8 +11,7 @@ public static class CartSteps
     private static readonly Random random = new();
 
     public static LambdaStep NewCart(HttpClient client) =>
-        new GivenLambdaStep()
-            .Named("Create new cart")
+        new LambdaStep("Create new cart")
             .HandleAsync(async context =>
             {
                 var url = $"api/cart/new";
@@ -22,8 +21,7 @@ public static class CartSteps
             });
 
     public static LambdaStep LoadProducts(HttpClient client) =>
-        new GivenLambdaStep()
-            .Named("Get product list")
+        new LambdaStep("Get product list")
             .HandleAsync(async context =>
             {
                 var url = "api/products";
@@ -35,8 +33,7 @@ public static class CartSteps
     // ---
 
     public static LambdaStep AddRandomProductToCart(HttpClient client) =>
-        new WhenLambdaStep()
-            .Named("Add random product to cart")
+        new LambdaStep("Add random product to cart")
             .HandleAsync(async context =>
             {
                 var cartId = (int)context.CartId;
@@ -48,8 +45,7 @@ public static class CartSteps
             });
 
     public static LambdaStep LoadCurrentCart(HttpClient client) =>
-        new WhenLambdaStep()
-            .Named("Load current cart")
+        new LambdaStep("Load current cart")
             .HandleAsync(async context =>
             {
                 var cartId = (int)context.CartId;
@@ -66,8 +62,7 @@ public static class CartSteps
             });
 
     public static LambdaStep ClearCurrentCart(HttpClient client) =>
-        new WhenLambdaStep()
-            .Named("Clear current cart")
+        new LambdaStep("Clear current cart")
             .HandleAsync(async context =>
             {
                 var cartId = (int)context.CartId;
@@ -79,8 +74,7 @@ public static class CartSteps
     // ---
 
     public static LambdaStep CheckCartSize(int size) =>
-        new WhenLambdaStep()
-            .Named($"Check cart contains {size:N0} items")
+        new WhenLambdaStep($"Check cart contains {size:N0} items")
             .Handle(context =>
             {
                 var cart = (ShoppingCart)context.Cart;

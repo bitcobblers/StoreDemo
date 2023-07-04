@@ -10,8 +10,7 @@ namespace Store.Tests.Steps;
 public static class OrderingSteps
 {
     public static LambdaStep PlaceOrder(HttpClient client) =>
-        new WhenLambdaStep()
-            .Named("Place order")
+        new LambdaStep("Place order")
             .HandleAsync(async context =>
             {
                 var cartId = (int)context.CartId;
@@ -35,8 +34,7 @@ public static class OrderingSteps
             });
 
     public static LambdaStep LoadLastOrder(HttpClient client) =>
-        new WhenLambdaStep()
-            .Named("Load last order")
+        new LambdaStep("Load last order")
             .HandleAsync(async context =>
             {
                 var orderId = (string)context.OrderId;
@@ -49,16 +47,14 @@ public static class OrderingSteps
     // ---
 
     public static LambdaStep CheckOrderId() =>
-        new ThenLambdaStep()
-            .Named("Check order id is set")
+        new LambdaStep("Check order id is set")
             .Handle(context =>
             {
                 Assert.NotNull(context.OrderId);
             });
 
     public static LambdaStep CheckLastOrderNotEmpty() =>
-        new ThenLambdaStep()
-            .Named("Check last order not empty")
+        new LambdaStep("Check last order not empty")
             .Handle(context =>
             {
                 var order = (Order)context.Order;
