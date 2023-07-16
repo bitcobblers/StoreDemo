@@ -11,22 +11,22 @@ public class ShoppingCartBehaviors : IClassFixture<StoreApi>
     public ShoppingCartBehaviors(StoreApi api) => _api = api;
 
     [Behavior]
-    public Behavior CreatingNewCartReturnsEmptyCart()
+    public void CreatingNewCartReturnsEmptyCart()
     {
         var client = _api.CreateClient();
 
-        return new Behavior()
+        BehaviorBuilder.New()
             .Given(CartSteps.NewCart(client))
             .When(CartSteps.LoadCurrentCart(client))
             .Then(CartSteps.CheckCartSize(0));
     }
 
     [Behavior]
-    public Behavior AddingItemsToCartUpdatesCart()
+    public void AddingItemsToCartUpdatesCart()
     {
         var client = _api.CreateClient();
 
-        return new Behavior()
+        BehaviorBuilder.New()
             .Given(CartSteps.NewCart(client))
             .Given(CartSteps.LoadProducts(client))
             .When(CartSteps.AddRandomProductToCart(client))
@@ -35,11 +35,11 @@ public class ShoppingCartBehaviors : IClassFixture<StoreApi>
     }
 
     [Behavior]
-    public Behavior ClearingCartRemovesAllItemsFromIt()
+    public void ClearingCartRemovesAllItemsFromIt()
     {
         var client = _api.CreateClient();
 
-        return new Behavior()
+        BehaviorBuilder.New()
             .Given(CartSteps.NewCart(client))
             .Given(CartSteps.LoadProducts(client))
             .When(CartSteps.AddRandomProductToCart(client))

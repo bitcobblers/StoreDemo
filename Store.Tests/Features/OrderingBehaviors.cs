@@ -11,11 +11,11 @@ public class OrderingBehaviors : IClassFixture<StoreApi>
     public OrderingBehaviors(StoreApi api) => _api = api;
 
     [Behavior]
-    public Behavior PurchasingItemsInCartCreatesNewOrder()
+    public void PurchasingItemsInCartCreatesNewOrder()
     {
         var client = _api.CreateClient();
 
-        return new Behavior()
+        BehaviorBuilder.New()
             .Given(CartSteps.NewCart(client))
             .Given(CartSteps.LoadProducts(client))
             .Given(CartSteps.AddRandomProductToCart(client))
@@ -24,11 +24,11 @@ public class OrderingBehaviors : IClassFixture<StoreApi>
     }
 
     [Behavior]
-    public Behavior LoadingLastOrderNumberReturnsListOfItems()
+    public void LoadingLastOrderNumberReturnsListOfItems()
     {
         var client = _api.CreateClient();
 
-        return new Behavior()
+        BehaviorBuilder.New()
             .Given(CartSteps.NewCart(client))
             .Given(CartSteps.LoadProducts(client))
             .Given(CartSteps.AddRandomProductToCart(client))

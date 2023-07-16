@@ -13,11 +13,11 @@ public class LoginBehaviors : IClassFixture<StoreApi>
     [Behavior]
     [InlineData("jdoe", "password", true)]
     [InlineData("unknown", "bad password", false)]
-    public Behavior EnsurePasswordIsValidated(string user, string password, bool expected)
+    public void EnsurePasswordIsValidated(string user, string password, bool expected)
     {
         var client = _storeApi.CreateClient();
 
-        return new Behavior()
+        BehaviorBuilder.New()
             .When(LoginSteps.Login(client, user, password))
             .Then(LoginSteps.CheckToken(expected));
     }
