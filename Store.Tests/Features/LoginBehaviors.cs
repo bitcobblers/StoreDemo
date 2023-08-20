@@ -1,5 +1,5 @@
 ﻿using DrillSergeant;
-using DrillSergeant.GWT;
+using static DrillSergeant.GWT;
 using Store.Tests.Steps;
 
 namespace Store.Tests.Features;
@@ -17,8 +17,7 @@ public class LoginBehaviors : IClassFixture<StoreApi>
     {
         var client = _storeApi.CreateClient();
 
-        BehaviorBuilder.New()
-            .When(LoginSteps.Login(client, user, password))
-            .Then(LoginSteps.CheckToken(expected));
+        When(LoginSteps.Login(client, user, password));
+        Then(LoginSteps.CheckToken(expected));
     }
 }

@@ -1,5 +1,4 @@
 ﻿using DrillSergeant;
-using DrillSergeant.GWT;
 using Store.Api.Models;
 using System.Net;
 using System.Net.Http.Json;
@@ -10,7 +9,7 @@ public static class LoginSteps
 {
     public static LambdaStep Login(HttpClient client, string user, string password) =>
         new LambdaStep("Login")
-            .HandleAsync(async context =>
+            .HandleAsync(async () =>
             {
                 var credentials = new LoginRequest(user, password);
                 var response = await client.PostAsJsonAsync("api/login", credentials);
@@ -21,27 +20,27 @@ public static class LoginSteps
                         .Content
                         .ReadFromJsonAsync<LoginResponse>();
 
-                    context.Token = body?.Token;
+                    CurrentBehavior.Context.Token = body?.Token;
                 }
                 else
                 {
-                    context.Token = null;
+                    CurrentBehavior.Context.Token = null;
                 }
 
-                context.LastResponse = response;
+                CurrentBehavior.Context.LastResponse = response;
             });
 
     public static LambdaStep CheckToken(bool isValid) =>
         new LambdaStep("Check token is valid")
-            .Handle(context =>
+            .Handle(() =>
             {
                 if (isValid)
                 {
-                    Assert.NotNull(context.Token);
+                    Assert.NotNull(CurrentBehavior.Context.Token);
                 }
                 else
                 {
-                    Assert.Null(context.Token);
+                    Assert.Null(CurrentBehavior.Context.Token);
                 }
             });
 }

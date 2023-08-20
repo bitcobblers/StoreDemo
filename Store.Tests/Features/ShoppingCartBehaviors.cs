@@ -1,5 +1,5 @@
 ﻿using DrillSergeant;
-using DrillSergeant.GWT;
+using static DrillSergeant.GWT;
 using Store.Tests.Steps;
 
 namespace Store.Tests.Features;
@@ -15,10 +15,9 @@ public class ShoppingCartBehaviors : IClassFixture<StoreApi>
     {
         var client = _api.CreateClient();
 
-        BehaviorBuilder.New()
-            .Given(CartSteps.NewCart(client))
-            .When(CartSteps.LoadCurrentCart(client))
-            .Then(CartSteps.CheckCartSize(0));
+        Given(CartSteps.NewCart(client));
+        When(CartSteps.LoadCurrentCart(client));
+        Then(CartSteps.CheckCartSize(0));
     }
 
     [Behavior]
@@ -26,12 +25,11 @@ public class ShoppingCartBehaviors : IClassFixture<StoreApi>
     {
         var client = _api.CreateClient();
 
-        BehaviorBuilder.New()
-            .Given(CartSteps.NewCart(client))
-            .Given(CartSteps.LoadProducts(client))
-            .When(CartSteps.AddRandomProductToCart(client))
-            .When(CartSteps.LoadCurrentCart(client))
-            .Then(CartSteps.CheckCartSize(1));
+        Given(CartSteps.NewCart(client));
+        Given(CartSteps.LoadProducts(client));
+        When(CartSteps.AddRandomProductToCart(client));
+        When(CartSteps.LoadCurrentCart(client));
+        Then(CartSteps.CheckCartSize(1));
     }
 
     [Behavior]
@@ -39,12 +37,11 @@ public class ShoppingCartBehaviors : IClassFixture<StoreApi>
     {
         var client = _api.CreateClient();
 
-        BehaviorBuilder.New()
-            .Given(CartSteps.NewCart(client))
-            .Given(CartSteps.LoadProducts(client))
-            .When(CartSteps.AddRandomProductToCart(client))
-            .When(CartSteps.ClearCurrentCart(client))
-            .When(CartSteps.LoadCurrentCart(client))
-            .Then(CartSteps.CheckCartSize(0));
+        Given(CartSteps.NewCart(client));
+        Given(CartSteps.LoadProducts(client));
+        When(CartSteps.AddRandomProductToCart(client));
+        When(CartSteps.ClearCurrentCart(client));
+        When(CartSteps.LoadCurrentCart(client));
+        Then(CartSteps.CheckCartSize(0));
     }
 }

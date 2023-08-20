@@ -1,5 +1,4 @@
 ﻿using DrillSergeant;
-using DrillSergeant.GWT;
 using Store.Api.Database;
 using Store.Api.Models;
 using System.Net;
@@ -11,9 +10,9 @@ public static class OrderingSteps
 {
     public static LambdaStep PlaceOrder(HttpClient client) =>
         new LambdaStep("Place order")
-            .HandleAsync(async context =>
+            .HandleAsync(async () =>
             {
-                var cartId = (int)context.CartId;
+                var cartId = (int)CurrentBehavior.Context.CartId;
                 var order = new PlaceOrderRequest(cartId);
                 var url = "api/order/place";
 
@@ -25,39 +24,36 @@ public static class OrderingSteps
                         .Content
                         .ReadFromJsonAsync<PlaceOrderResponse>();
 
-                    context.OrderId = body?.OrderNumber;
+                    CurrentBehavior.Context.OrderId = body?.OrderNumber;
                 }
                 else
                 {
-                    context.OrderId = null;
+                    CurrentBehavior.Context.OrderId = null;
                 }
             });
 
     public static LambdaStep LoadLastOrder(HttpClient client) =>
         new LambdaStep("Load last order")
-            .HandleAsync(async context =>
+            .HandleAsync(async () =>
             {
-                var orderId = (string)context.OrderId;
+                var orderId = (string)CurrentBehavior.Context.OrderId;
                 var url = $"api/order/{orderId}";
                 var order = await client.GetFromJsonAsync<Order>(url);
 
-                context.Order = order;
+                CurrentBehavior.Context.Order = order;
             });
 
     // ---
 
     public static LambdaStep CheckOrderId() =>
         new LambdaStep("Check order id is set")
-            .Handle(context =>
-            {
-                Assert.NotNull(context.OrderId);
-            });
+            .Handle(() => { Assert.NotNull(CurrentBehavior.Context.OrderId); });
 
     public static LambdaStep CheckLastOrderNotEmpty() =>
         new LambdaStep("Check last order not empty")
-            .Handle(context =>
+            .Handle(() =>
             {
-                var order = (Order)context.Order;
+                var order = (Order)CurrentBehavior.Context.Order;
                 Assert.NotEmpty(order.Items);
             });
 }
